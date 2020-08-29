@@ -1,32 +1,37 @@
-# ⚛️ React component for 🍃 Neshan Leaflet map.
+# ⚛️ A minimal React wrapper for OpenLayers 5+
 
 ## Getting started
-
-In the simple case you just need to add `options` prop to `NeshanMap` component and import [`NeshanLeaflet`](https://static.neshan.org/sdk/leaflet/1.4.0/leaflet.css) stylesheet.
+We have two components: `NeshanMapLoader`, `NeshanMap`.<br>
+Please note that to use `NeshanMap` component you must first load `Openlayers` library.<br>
+<br>
+In the simple case you just need to add `options` prop to `NeshanMap` component under the `NeshanMapLoader` component.
 
 
 ```javascript
-import React from 'react';
-import NeshanMap from 'react-neshan-map-leaflet'
+import React, { useState } from "react";
+import NeshanMap, {NeshanMapLoader} from "react-neshan-map-openlayers";
 
-import './SimpleMap.css';
+const SimpleMap = () => {
+  const [ol, setOl] = useState();
 
-function SimpleMap() {
   return (
-    <NeshanMap
-      options={{
-        key: 'YOUR_API_KEY',
-        maptype: 'dreamy',
-        poi: true,
-        traffic: false,
-        center: [35.699739, 51.338097],
-        zoom: 13
-      }}
-    />
+    <NeshanMapLoader onLoad={setOl}>
+      {ol && (
+        <NeshanMap
+          options={{
+            key: "YOUR_API_KEY",
+            view: new ol.View({
+              center: ol.proj.fromLonLat([51.338076, 35.699756]),
+              zoom: 13,
+            }),
+          }}
+        />
+      )}
+    </NeshanMapLoader>
   );
-}
-
+};
 export default SimpleMap;
+
 
 ```
 
@@ -34,50 +39,63 @@ export default SimpleMap;
 
 npm:
 ```
-npm i react-neshan-map-leaflet
+npm install react-neshan-map-openlayers
 ```
 
 ## Features
 
 ### Neshan Maps API Loads on Demand
 
-There is no need to place a `<script src=` tag at top of page. The Neshan Maps API loads upon the first usage of the `NeshanMapReactLeaflet` component.
+There is no need to place a `<script src=` tag at top of page. The Neshan Maps API loads upon the first usage of the `NeshanMap` component.
 
-### Use Laflet Maps API 
+### Use Openlayers Maps API 
 
-You can access to Leaflet Maps `L` , `map`  objects by using `onInit`.
+You can access to `map` objects by using `onInit`.
 
 ```javascript
 ...
-<NeshanMap
-  options={{
-    key: 'YOUR_API_KEY',
-    maptype: 'dreamy',
-    poi: true,
-    traffic: false,
-    center: [35.699739, 51.338097],
-    zoom: 13
-  }}
+<NeshanMapLoader onLoad={setOl}>
+  {ol && (
+    <NeshanMap
+      options={{
+        key: 'YOUR_API_KEY',
+        maptype: 'dreamy',
+        poi: true,
+        traffic: false,
+        view: new ol.View({
+          center: ol.proj.fromLonLat([51.338076, 35.699756]),
+          zoom: 14
+        })
+      }}
 
-  onInit={(L, myMap) => {
-    let marker = L.marker([35.699739, 51.338097])
-      .addTo(myMap)
-      .bindPopup('I am a popup.');
+      onInit={(myMap) => {
+        var layer = new ol.layer.Vector({
+          source: new ol.source.Vector({
+            features: [
+              new ol.Feature({
+                geometry: new ol.geom.Point(
+                  ol.proj.fromLonLat([51.338076, 35.699756])
+                )
+              })
+            ]
+          }),
+          style: new ol.style.Style({
+            image: new ol.style.Icon({
+              color: '#BADA55',
+              crossOrigin: 'anonymous',
+              src:
+                'https://openlayers.org/en/latest/examples/data/square.svg'
+            })
+          })
+        })
+        myMap.addLayer(layer)
+      }}
 
-    myMap.on('click', function (e) {
-      marker.setLatLng(e.latlng)
-    });
-
-    L.circle([35.699739, 51.348097], {
-      color: 'red',
-      fillColor: '#f03',
-      fillOpacity: 0.5,
-      radius: 500
-    }).addTo(myMap);
-  }}
-/>
+    />
+  )}
+</NeshanMapLoader>
 
 ```
 
-[Example here](https://github.com/AliSeyfollahi/react-neshan-map-leaflet/react-neshan-map-leaflet/example/index.js#L8)
+[Example here](https://github.com/AliSeyfollahi/react-neshan-map-openlayers/blob/master/src/example/SimpleMapFunctionBase.js#L9)
 
