@@ -1,6 +1,7 @@
 # ⚛️ A minimal React wrapper for OpenLayers 5+
 
-Developed by [Neshan Maps Platform team](https://platform.neshan.org).
+### Developed by [Neshan Maps Platform team](https://platform.neshan.org).
+### For Farsi/Persian document, [click here](https://developers.neshan.org/react-component/).
 
 ## Getting started
 We have two components: `NeshanMapLoader`, `NeshanMap`.<br>
