@@ -1,5 +1,7 @@
 # ⚛️ A minimal React wrapper for OpenLayers 5+
 
+Developed by [Neshan Maps Platform team](https://platform.neshan.org).
+
 ## Getting started
 We have two components: `NeshanMapLoader`, `NeshanMap`.<br>
 Please note that to use `NeshanMap` component you must first load `Openlayers` library.<br>
